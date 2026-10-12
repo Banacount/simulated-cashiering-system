@@ -2,6 +2,7 @@ package org.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -11,6 +12,8 @@ import java.awt.Image;
 import java.awt.Label;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -20,12 +23,9 @@ class GUI {
 	JFrame JF;
 
 	// font sizes
-	Font h1_font;
-	Font h2_font;
-	Font h3_font;
-	Font h4_font;
-	Font h5_font;
-	Font h6_font;
+	Font itemQuantityFont;
+	Font itemNameFont;
+	Font itemPriceFont;
 
 	GUI () { 
 		// Enable anti-aliasing
@@ -43,22 +43,16 @@ class GUI {
 
 			// load fonts
 			Font baseFont = Font.createFont(Font.TRUETYPE_FONT, file);
-			h1_font = baseFont.deriveFont(32f);
-			h2_font = baseFont.deriveFont(24f);
-			h3_font = baseFont.deriveFont(18f);
-			h4_font = baseFont.deriveFont(16f);
-			h5_font = baseFont.deriveFont(13f);
-			h6_font = baseFont.deriveFont(10f);
+			itemQuantityFont = baseFont.deriveFont(32f);
+			itemNameFont = baseFont.deriveFont(12f);;
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 
-			h1_font = new Font("Arial", Font.PLAIN, 32);
-			h2_font = new Font("Arial", Font.PLAIN, 24);
-			h3_font = new Font("Arial", Font.PLAIN, 18);
-			h4_font = new Font("Arial", Font.PLAIN, 16);
-			h5_font = new Font("Arial", Font.PLAIN, 13);
-			h6_font = new Font("Arial", Font.PLAIN, 10);
+			itemQuantityFont = new Font("Arial", Font.PLAIN, 32);
+			itemNameFont = new Font("Arial", Font.PLAIN, 3);
 		}
+
+		itemPriceFont = new Font("Arial", Font.PLAIN, 12);
 	}
 
 	public void config () {
@@ -67,44 +61,33 @@ class GUI {
 
 	public void addContents () {
 		// McDonalds Logo
-		JLabel mcLogo = MyUtils.imageLabel(20, 20, 50, 50, "/mcdonalds_logo.png");
+		JLabel mcLogo = MyUtils.imageLabel(8, 8, 50, 50, "/mcdonalds_logo.png");
 		JF.add(mcLogo);
 
 		// Products
 		JPanel item_container = new JPanel();
-		item_container.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
+		item_container.setLayout(new FlowLayout(FlowLayout.LEFT, 6, 6));
 
-		JPanel item = MyUtils.productItem(
-			"Test", 
-			"P 50", 
-			"/test_product.png", 
-			h5_font, 
-			h2_font
-		);
-		JPanel item2 = MyUtils.productItem(
-			"Test", 
-			"P 50", 
-			"/test_product.png", 
-			h5_font, 
-			h2_font
-		);
-		JPanel item3 = MyUtils.productItem(
-			"Test", 
-			"P 50", 
-			"/test_product.png", 
-			h5_font, 
-			h2_font
-		);
-		item_container.add(item);
-		item_container.add(item2);
-		item_container.add(item3);
-		item_container.setBounds(20, 100, 700, 500);
+		for (int i = 0; i < 12; ++i) {
+			ProductItem item = new ProductItem(
+				"Test number " + i, 
+				50, 
+				"/test_product.png", 
+				itemNameFont, 
+				itemPriceFont,
+				itemQuantityFont
+			);
+			item_container.add(item.getJPanel());
+		}
+
+		item_container.setBackground(Config.colors.item_container_bg);
+		item_container.setBounds(8, 60, 700, 620);
 		JF.add(item_container);
 	}
 
 	public void display () {
 		JF.setResizable(false);
-		JF.setSize(800, 700);
+		JF.setSize(1080,720);
 		JF.setVisible(true);
 		JF.getContentPane().setBackground(Config.colors.bg_color);
 		JF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -137,32 +120,78 @@ class MyUtils {
 		button.setBounds(x, y, width, height);
 		return button;
 	}
+}
 
-	public static JPanel productItem (String name, String price, String imagePath, Font font_1, Font font_2) 
-	{
-		JPanel item = new JPanel();
-		JLabel productImage = MyUtils.imageLabel(0, 0, 200, 200, imagePath);
+class ProductItem {
+	JPanel item;
+	int quantity = 0, price;
 
-		JLabel productName = new JLabel(name, SwingConstants.CENTER);
-		JLabel productPrice = new JLabel(price, SwingConstants.CENTER);
+	ProductItem (String name, int productPrice, String imagePath, Font nameFont, Font priceFont, Font quantityFont) {
+		int width = 163 + 4, height = 194 + 4, imgPadding = 20;
+		price = productPrice;
 
-		int offset = 202;
+		item = new JPanel();
+		JLabel productImage = MyUtils.imageLabel(
+			imgPadding/2, 
+			imgPadding/2, 
+			width-imgPadding, 
+			width-imgPadding, 
+			imagePath
+		);
 
-		productName.setFont(font_1);
-		productName.setBounds(0, offset+5, 200, 20);
+		JLabel productNameLbl = new JLabel(name, SwingConstants.CENTER);
+		JLabel productPriceLbl = new JLabel("₱ " + price, SwingConstants.CENTER);
+		JLabel productQuantityLbl = new JLabel("0", SwingConstants.LEFT);
 
-		productPrice.setFont(font_2);
-		productPrice.setBounds(0, offset+30, 200, 30);
+		int offset = width;
+
+		productNameLbl.setFont(nameFont);
+		productNameLbl.setBounds(imgPadding/2, offset-6, width-imgPadding, 16);
+		productNameLbl.setForeground(Config.colors.fg_color);
+
+		productPriceLbl.setFont(priceFont);
+		productPriceLbl.setBounds(0, offset+6, width, 22);
+		productPriceLbl.setForeground(Config.colors.fg_color);
+
+		productQuantityLbl.setFont(quantityFont);
+		productQuantityLbl.setBounds(10, 10, width-50, 40);
+		productQuantityLbl.setForeground(Config.colors.item_selected_border);
 
 		item.setLayout(null);
+		item.add(productQuantityLbl);
 		item.add(productImage);
-		item.add(productName);
-		item.add(productPrice);
-		item.setBorder(BorderFactory.createLineBorder(Config.colors.fg_color_2, 5));
-		item.setBackground(Config.colors.fg_color_2);
-		item.setSize(200, 260);
-		item.setPreferredSize(new Dimension(200, 260));
+		item.add(productNameLbl);
+		item.add(productPriceLbl);
 
+		item.setBackground(Config.colors.item_container_bg);
+		item.setBorder(BorderFactory.createLineBorder(Config.colors.item_border, 1));
+		item.setSize(width, height);
+		item.setPreferredSize(new Dimension(width, height));
+		item.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+		// Item events
+		productQuantityLbl.setVisible(false);
+		item.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getButton() == 3 && quantity > 0) quantity--;
+				if (e.getButton() == 1) quantity++;
+
+				if (quantity > 0) {
+					item.setBorder(BorderFactory.createLineBorder(Config.colors.item_selected_border, 2));
+					productQuantityLbl.setVisible(true);
+					productQuantityLbl.setText(String.valueOf(quantity));
+				} else {
+					item.setBorder(BorderFactory.createLineBorder(Config.colors.item_border, 1));
+					productQuantityLbl.setVisible(false);
+				}
+
+				System.out.println(name + ": " + quantity);
+			}
+		});
+	}
+
+	public JPanel getJPanel () {
 		return item;
 	}
 }
