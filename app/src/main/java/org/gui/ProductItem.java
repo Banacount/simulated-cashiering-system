@@ -5,11 +5,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.*; 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel; 
 
 public class ProductItem {
 	JPanel item;
-	int quantity = 0, price;
+	JFormattedTextField totalIn;
+	int quantity = 0, price, id;
+	DefaultTableModel model;
 
 	ProductItem (String name, int productPrice, String imagePath, Font nameFont, Font priceFont, Font quantityFont) {
 		int width = 163 + 4, height = 194 + 4, imgPadding = 20;
@@ -62,6 +65,7 @@ public class ProductItem {
 				if (e.getButton() == 3 && quantity > 0) quantity--;
 				if (e.getButton() == 1) quantity++;
 
+				// Indicator for quantity
 				if (quantity > 0) {
 					item.setBorder(BorderFactory.createLineBorder(Config.colors.item_selected_border, 2));
 					productQuantityLbl.setVisible(true);
@@ -72,6 +76,37 @@ public class ProductItem {
 				}
 
 				System.out.println(name + ": " + quantity);
+
+				// Update the product lister
+				int totalRows = model.getRowCount();
+				int itemRow = -1;
+
+				for (int i = 0; i < totalRows; i++) {
+					int row_id = (Integer) model.getValueAt(i, 4);
+
+					if (row_id == id) itemRow = i;
+				}
+
+				if (itemRow == -1 && quantity > 0) {
+					String total = "₱ "+ (price*quantity);
+					model.addRow(new Object[]{name, price, quantity, total, id});
+				} else if (itemRow > -1) {
+					String total = "₱ "+ (price*quantity);
+					model.setValueAt(quantity, itemRow, 2);
+					model.setValueAt(total, itemRow, 3);
+				}
+
+				if (itemRow != -1 && quantity <= 0) model.removeRow(itemRow);
+
+				// Calculate total
+				int total = 0;
+				totalRows = model.getRowCount();
+				for (int t = 0; t < totalRows; t++) {
+					int price = (Integer) model.getValueAt(t, 1);
+					int quantity = (Integer) model.getValueAt(t, 2);
+					total += price*quantity;
+				}
+				totalIn.setValue(total);
 			}
 		});
 	}
@@ -81,3 +116,37 @@ public class ProductItem {
 	}
 }
 
+class ProductItemManager {
+	private ProductItem[] products = new ProductItem[12];
+
+	ProductItemManager (Font nameFont, Font priceFont, Font quantityFont, DefaultTableModel model, JFormattedTextField totalIn) {
+		products[0]  = new ProductItem("1-pc. Chicken McDo", 104, "/products/1pc_chicken_mcdo.png", nameFont, priceFont, quantityFont);
+		products[1]  = new ProductItem("Crispy Chicken Fillet Ala King", 99, "/products/crispy_chicken_fillet_ala_king.png", nameFont, priceFont, quantityFont);
+		products[2]  = new ProductItem("McShaker Fries Medium Galbi", 115, "/products/mcshaker_fries_medium_galbi.png", nameFont, priceFont, quantityFont);
+		products[3]  = new ProductItem("6-pc. Chicken McShare Box", 525, "/products/6pc_chicken_mcshare_box.png", nameFont, priceFont, quantityFont);
+		products[4]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
+		products[5]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
+		products[6]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
+		products[7]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
+		products[8]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
+		products[9]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
+		products[10] = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
+		products[11] = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
+
+		for (int e = 0; e < products.length; e++) {
+			products[e].id = e;
+			products[e].model = model;
+			products[e].totalIn = totalIn;
+		}
+	}
+
+	void render (JPanel container) {
+		for (int i = 0; i < products.length; i++) {
+			container.add(products[i].getJPanel());
+		}
+	}
+
+	ProductItem getProduct (int productIndex) {
+		return products[productIndex];
+	}
+}
