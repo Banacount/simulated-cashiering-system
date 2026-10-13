@@ -3,16 +3,22 @@ package org.gui;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel; 
+import javax.swing.table.DefaultTableModel;
+
+import org.gui.Config.colors; 
 
 public class ProductItem {
 	JPanel item;
 	JFormattedTextField totalIn;
 	int quantity = 0, price, id;
+	Boolean isDisabled = false;
 	DefaultTableModel model;
+	JLabel nameLabel, priceLabel, quantityLabel, imageLabel;
+	Image originalImage, grayImage;
 
 	ProductItem (String name, int productPrice, String imagePath, Font nameFont, Font priceFont, Font quantityFont) {
 		int width = 163 + 4, height = 194 + 4, imgPadding = 20;
@@ -26,6 +32,8 @@ public class ProductItem {
 			width-imgPadding, 
 			imagePath
 		);
+		originalImage = MyUtils.tempOrigImage;
+		grayImage = MyUtils.tempGrayImage;
 
 		JLabel productNameLbl = new JLabel(name, SwingConstants.CENTER);
 		JLabel productPriceLbl = new JLabel("₱ " + price, SwingConstants.CENTER);
@@ -57,13 +65,26 @@ public class ProductItem {
 		item.setPreferredSize(new Dimension(width, height));
 		item.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-		// Item events
+		// Item events/actions/interaction
 		productQuantityLbl.setVisible(false);
 		item.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (isDisabled) return;
 				if (e.getButton() == 3 && quantity > 0) quantity--;
 				if (e.getButton() == 1) quantity++;
+
+				// Enter quantity manually
+				if (e.getButton() == 2) {
+					String userInput = JOptionPane.showInputDialog("Enter item quantity:");
+
+					try {
+						int quantityInput = Integer.parseInt(userInput);
+						quantity += quantityInput;
+					} catch (NumberFormatException err) {
+						JOptionPane.showMessageDialog(item, "Quantity input is invalid.", "Input Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
 
 				// Indicator for quantity
 				if (quantity > 0) {
@@ -109,10 +130,11 @@ public class ProductItem {
 				totalIn.setValue(total);
 			}
 		});
-	}
 
-	public JPanel getJPanel () {
-		return item;
+		nameLabel = productNameLbl;
+		priceLabel = productPriceLbl;
+		quantityLabel = productQuantityLbl;
+		imageLabel = productImage;
 	}
 }
 
@@ -142,7 +164,49 @@ class ProductItemManager {
 
 	void render (JPanel container) {
 		for (int i = 0; i < products.length; i++) {
-			container.add(products[i].getJPanel());
+			container.add(products[i].item);
+		}
+	}
+
+	void disableAllProduct () {
+		for (int i = 0; i < products.length; i++) {
+			ProductItem product = products[i];
+
+			product.isDisabled = true;
+			product.nameLabel.setForeground(Config.colors.disabled_color);
+			product.priceLabel.setForeground(Config.colors.disabled_color);
+			product.quantityLabel.setForeground(Config.colors.disabled_color);
+			product.item.setBorder(BorderFactory.createLineBorder(Config.colors.disabled_color, 2));
+			// Change image
+			ImageIcon loadImg = new ImageIcon(product.grayImage);
+			product.imageLabel.setIcon(loadImg);
+		}
+	}
+
+	void enableAllProduct () {
+		for (int i = 0; i < products.length; i++) {
+			ProductItem product = products[i];
+
+			product.isDisabled = false;
+			product.nameLabel.setForeground(Config.colors.fg_color);
+			product.priceLabel.setForeground(Config.colors.fg_color);
+			product.quantityLabel.setForeground(Config.colors.item_selected_border);
+			product.item.setBorder(BorderFactory.createLineBorder(Config.colors.item_border, 1));
+
+			// Change image
+			ImageIcon loadImg = new ImageIcon(product.originalImage);
+			product.imageLabel.setIcon(loadImg);
+		}
+	}
+
+	void resetAllProduct () {
+		enableAllProduct();
+
+		for (int i = 0; i < products.length; i++) {
+			ProductItem product = products[i];
+			product.quantity = 0;
+			product.model.setRowCount(0);
+			product.quantityLabel.setVisible(false);
 		}
 	}
 

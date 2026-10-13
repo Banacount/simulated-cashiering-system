@@ -1,5 +1,6 @@
 package org.gui;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -70,26 +71,28 @@ class GUI {
 		JF.add(productList.scrollList);
 
 		// Cashier operations
+		// Total input and label
 		int inputOffset = 360;
-		JLabel totalLabel = MyUtils.quickLabel(720, inputOffset, "Total", inputLabelFont);
-		JFormattedTextField totalIn = MyUtils.quickInput(720, inputOffset+60, inputFont, false);
-		JF.add(totalLabel);
+		JFormattedTextField totalIn = MyUtils.inputOperations(
+			inputFont, inputLabelFont, 
+			inputOffset, JF, "Total", false
+		);
 		JF.add(totalIn);
-
+		// Cash input and label
 		inputOffset += 80;
-		JLabel cashLabel = MyUtils.quickLabel(720, inputOffset, "Cash", inputLabelFont);
-		JFormattedTextField cashIn = MyUtils.quickInput(720, inputOffset+60, inputFont, true);
-		JF.add(cashLabel);
+		JFormattedTextField cashIn = MyUtils.inputOperations(
+			inputFont, inputLabelFont, 
+			inputOffset, JF, "Cash", true
+		);
 		JF.add(cashIn);
-
+		// Change input and label
 		inputOffset += 80;
-		JLabel changeLabel = MyUtils.quickLabel(720, inputOffset, "Change", inputLabelFont);
-		JFormattedTextField changeIn = MyUtils.quickInput(720, inputOffset+60, inputFont, false);
-		JF.add(changeLabel);
+		JFormattedTextField changeIn = MyUtils.inputOperations(
+			inputFont, inputLabelFont, 
+			inputOffset, JF, "Change", false
+		);
 		JF.add(changeIn);
-		// Buttons
-		// later huhu TwT
-		
+
 		// Products and its container
 		JPanel item_container = new JPanel();
 		ProductItemManager products = new ProductItemManager(
@@ -101,6 +104,26 @@ class GUI {
 		item_container.setBounds(8, 60, 700, 620);
 		products.render(item_container);
 		JF.add(item_container);
+
+		// Buttons
+		JButton okButton = new JButton("OK"); okButton.setFont(inputLabelFont);
+		okButton.setBounds(1000, 630, 60, 40);
+
+		JButton nextButton = new JButton("Next Customer"); nextButton.setFont(inputLabelFont);
+		nextButton.setBounds(830, 630, 165, 40);
+
+		JButton cancelButton = new JButton("Cancel"); cancelButton.setFont(inputLabelFont);
+		cancelButton.setBounds(721, 630, 104, 40);
+
+		Config.ButtonConfig.inputButtonsStyles(okButton, nextButton, cancelButton);
+		Config.ButtonConfig.inputButtonsFunctions(
+			okButton, nextButton, cancelButton, products,
+			new Object[] {totalIn, cashIn, changeIn}
+		);
+		JF.add(okButton);
+		JF.add(nextButton);
+		JF.add(cancelButton);
+		
 	}
 
 	public void display () {
@@ -113,7 +136,14 @@ class GUI {
 }
 
 class MyUtils {
-	public static void inputOperations() {
+	static Image tempGrayImage, tempOrigImage;
+
+	public static JFormattedTextField inputOperations (Font inputFont, Font inputLabelFont, int offset, JFrame JF, String labelText, Boolean canEdit) {
+		JLabel label = MyUtils.quickLabel(720, offset, labelText, inputLabelFont);
+		JFormattedTextField field = MyUtils.quickInput(720, offset+60, inputFont, canEdit);
+
+		JF.add(label);
+		return field;
 	}
 
 	public static JLabel imageLabel (int x, int y, int width, int height, String imagePath) 
@@ -126,6 +156,11 @@ class MyUtils {
 		ImageIcon loadImage = new ImageIcon(importImage);
 		JLabel label = new JLabel(loadImage);
 		label.setBounds(x, y, width, height);
+
+		// Process orig and gray version
+		tempOrigImage = importImage;
+		tempGrayImage = GrayFilter.createDisabledImage(importImage);
+
 		return label;
 	}
 

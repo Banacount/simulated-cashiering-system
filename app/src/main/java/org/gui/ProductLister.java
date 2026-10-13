@@ -10,7 +10,7 @@ public class ProductLister {
 	DefaultTableModel model;
 
 	ProductLister (Font tableHeaderFont) {
-		String[] columns = {"Name", "Price", "Quantity", "Total Amount", "id"};
+		String[] columns = {"Name", "Price", "Quantity", "Subtotal", "id"};
 
 		model = new DefaultTableModel(columns, 0);
 		productsSelectedTable = new JTable(model);
