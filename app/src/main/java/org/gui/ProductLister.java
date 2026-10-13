@@ -7,12 +7,13 @@ import javax.swing.table.DefaultTableModel;
 public class ProductLister {
 	JTable productsSelectedTable;
 	JScrollPane scrollList;
-	DefaultTableModel model;
+	DefaultTableModel model, globalModel;
 
 	ProductLister (Font tableHeaderFont) {
 		String[] columns = {"Name", "Price", "Quantity", "Subtotal", "id"};
 
 		model = new DefaultTableModel(columns, 0);
+		globalModel = new DefaultTableModel(columns, 0);
 		productsSelectedTable = new JTable(model);
 		scrollList = new JScrollPane(productsSelectedTable);
 

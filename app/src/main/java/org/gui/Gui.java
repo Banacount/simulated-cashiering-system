@@ -23,7 +23,7 @@ class GUI {
 	Font tableHeaderFont;
 	Font inputLabelFont;
 	Font inputFont;
-	DefaultTableModel tableModel;
+	ProductLister productList;
 
 	GUI () { 
 		// Enable anti-aliasing
@@ -65,10 +65,10 @@ class GUI {
 		JF.add(mcLogo);
 
 		// Product Lister
-		ProductLister productList = new ProductLister(tableHeaderFont);
-		tableModel = productList.model;
+		productList = new ProductLister(tableHeaderFont);
 		productList.scrollList.setBounds(720, 60, 345, 320);
 		JF.add(productList.scrollList);
+
 
 		// Cashier operations
 		// Total input and label
@@ -93,11 +93,12 @@ class GUI {
 		);
 		JF.add(changeIn);
 
+
 		// Products and its container
 		JPanel item_container = new JPanel();
 		ProductItemManager products = new ProductItemManager(
 			itemNameFont, itemPriceFont, itemQuantityFont, 
-			tableModel, totalIn
+			productList.model, productList.globalModel, totalIn
 		);
 		item_container.setLayout(new FlowLayout(FlowLayout.LEFT, 6, 6));
 		item_container.setBackground(Config.colors.item_container_bg);
@@ -106,24 +107,28 @@ class GUI {
 		JF.add(item_container);
 
 		// Buttons
+		// - ok
 		JButton okButton = new JButton("OK"); okButton.setFont(inputLabelFont);
 		okButton.setBounds(1000, 630, 60, 40);
-
+		// - next
 		JButton nextButton = new JButton("Next Customer"); nextButton.setFont(inputLabelFont);
 		nextButton.setBounds(830, 630, 165, 40);
-
+		// - cancel
 		JButton cancelButton = new JButton("Cancel"); cancelButton.setFont(inputLabelFont);
 		cancelButton.setBounds(721, 630, 104, 40);
+		// - sales inventory
+		JButton salesButton = new JButton("Sales Inventory"); salesButton.setFont(inputLabelFont);
+		salesButton.setBounds(880, 16, 180, 40);
 
-		Config.ButtonConfig.inputButtonsStyles(okButton, nextButton, cancelButton);
+		Config.ButtonConfig.inputButtonsStyles(okButton, nextButton, cancelButton, salesButton);
 		Config.ButtonConfig.inputButtonsFunctions(
-			okButton, nextButton, cancelButton, products,
-			new Object[] {totalIn, cashIn, changeIn}
+			okButton, nextButton, cancelButton, salesButton, 
+			products, new Object[] {totalIn, cashIn, changeIn}
 		);
 		JF.add(okButton);
 		JF.add(nextButton);
 		JF.add(cancelButton);
-		
+		JF.add(salesButton);
 	}
 
 	public void display () {
