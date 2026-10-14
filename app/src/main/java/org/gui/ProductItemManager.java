@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
-import org.gui.*;
 
 public class ProductItemManager {
 	private ProductItem[] products = new ProductItem[12];
@@ -42,6 +41,15 @@ public class ProductItemManager {
 				e
 			});
 		}
+		globalModel.addRow((Object[]) null);
+		globalModel.addRow((Object[]) null);
+		globalModel.addRow(new Object[]{
+			"TOTAL SALES",
+			"",
+			"",
+			"₱ 0",
+			-1,
+		});
 
 		Model = model;
 		GlobalModel = globalModel;

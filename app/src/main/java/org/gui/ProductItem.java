@@ -28,15 +28,15 @@ public class ProductItem {
 		productName = name;
 
 		item = new JPanel();
-		JLabel productImage = MyUtils.imageLabel(
+		JLabel productImage = Helpers.imageLabel(
 			imgPadding/2, 
 			imgPadding/2, 
 			width-imgPadding, 
 			width-imgPadding, 
 			imagePath
 		);
-		originalImage = MyUtils.tempOrigImage;
-		grayImage = MyUtils.tempGrayImage;
+		originalImage = Helpers.tempOrigImage;
+		grayImage = Helpers.tempGrayImage;
 
 		JLabel productNameLbl = new JLabel(name, SwingConstants.CENTER);
 		JLabel productPriceLbl = new JLabel("₱ " + price, SwingConstants.CENTER);

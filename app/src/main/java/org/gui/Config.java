@@ -1,16 +1,27 @@
 package org.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class Config {
 	public static Boolean canClickNext = false;
+	public static int allProductsCount = 12;
+	public static double TotalSales = 0;
+	public static JFrame mainWindow;
+	public static Font itemQuantityFont;
+	public static Font itemNameFont;
+	public static Font itemPriceFont;
+	public static Font tableHeaderFont;
+	public static Font inputLabelFont;
+	public static Font inputFont;
 
 	class colors {
 		final static Color bg_color = new Color(219, 0, 7);
@@ -89,16 +100,21 @@ public class Config {
 				DefaultTableModel globalModel = productItemManager.GlobalModel;
 				int totalRow = model.getRowCount();
 
+				Config.TotalSales = 0;
 				for (int t = 0; t < totalRow; t++) {
 					int rowId = (Integer) model.getValueAt(t, 4),
 						quantity = (Integer) model.getValueAt(t, 2),
 						price = (Integer) globalModel.getValueAt(rowId, 1),
 						productSold = (Integer) globalModel.getValueAt(rowId, 2);
 
+					Config.TotalSales += price*(quantity+productSold);
 					String total = "₱ "+ (price*(quantity+productSold));
 					globalModel.setValueAt(productSold+quantity, rowId, 2);
 					globalModel.setValueAt(total, rowId, 3);
 				}
+				// Calculate the total sales
+				String total = "₱ " + Config.TotalSales;
+				globalModel.setValueAt((Object)total, 14, 3);
 
 				productItemManager.resetAllProduct();
 				totalIn.setValue(0);
@@ -136,9 +152,9 @@ public class Config {
 			salesButton.addActionListener(e -> {
 				// print global table (testing)
 				DefaultTableModel global = productItemManager.GlobalModel;
-				int totalRow2 = productItemManager.GlobalModel.getRowCount();
+				int totalRow = Config.allProductsCount;
 
-				for (int i = 0; i < totalRow2; i++) {
+				for (int i = 0; i < totalRow; i++) {
 					System.out.print("Name: " + global.getValueAt(i, 0) + ", ");
 					System.out.print("Price: " + global.getValueAt(i, 1) + ", ");
 					System.out.print("Quantity: " + global.getValueAt(i, 2) + ", ");
@@ -146,6 +162,9 @@ public class Config {
 					System.out.println("");
 				}
 				System.out.println("\n");
+
+				// Show GUI table
+				ProductLister.showSalesInventory(productItemManager.GlobalModel);
 			});
 		}
 	}
