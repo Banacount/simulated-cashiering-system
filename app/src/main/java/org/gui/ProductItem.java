@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -75,15 +77,16 @@ public class ProductItem {
 			public void mouseClicked(MouseEvent e) {
 				if (isDisabled) return;
 				if (e.getButton() == 3 && quantity > 0) quantity--;
-				if (e.getButton() == 1) quantity++;
+				if (e.getButton() == 2) quantity++;
 
 				// Enter quantity manually
-				if (e.getButton() == 2) {
+				if (e.getButton() == 1) {
 					String userInput = JOptionPane.showInputDialog("Enter item quantity:");
+					if (userInput.equals("")) return;
 
 					try {
 						int quantityInput = Integer.parseInt(userInput);
-						quantity += quantityInput;
+						quantity = (quantityInput >= 0 ? quantityInput : 0);
 					} catch (NumberFormatException err) {
 						JOptionPane.showMessageDialog(item, "Quantity input is invalid.", "Input Error", JOptionPane.ERROR_MESSAGE);
 					}
@@ -99,7 +102,6 @@ public class ProductItem {
 					productQuantityLbl.setVisible(false);
 				}
 
-				//System.out.println(name + ": " + quantity);
 				// Update the product lister
 				int totalRows = model.getRowCount();
 				int itemRow = -1;

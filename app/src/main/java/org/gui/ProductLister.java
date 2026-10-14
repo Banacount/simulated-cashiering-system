@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 public class ProductLister {
 	JTable productsSelectedTable;
 	JScrollPane scrollList;
+	JDialog salesInventoryWindow;
 	DefaultTableModel model, globalModel;
 	Font HeaderFont;
 
@@ -30,13 +31,15 @@ public class ProductLister {
 		// Current table config
 		productsSelectedTable.setDefaultEditor(Object.class, null);
 		productsSelectedTable.removeColumn(productsSelectedTable.getColumn("id"));
+		salesInventoryWindow = createSalesInventoryWindow(globalModel);
 	}
 
-	static void showSalesInventory (DefaultTableModel globalModel) {
-		JDialog tempWindow = new JDialog(Config.mainWindow, "Sales Inventory");
+	static JDialog createSalesInventoryWindow (DefaultTableModel globalModel) {
+		JDialog window = new JDialog(Config.mainWindow, "Sales Inventory");
 		JTable salesInventoryTable = new JTable(globalModel);
 		JScrollPane salesInventoryPane = new JScrollPane(salesInventoryTable);
-		tempWindow.setLayout(null);
+		JLabel inventoryLabel = new JLabel("McDonald's Sales Inventory");
+		window.setLayout(null);
 
 		// Global table column sizing
 		int columnWidth = 560, rowWidth = 300, columnOverAllWidth = 540;
@@ -48,7 +51,7 @@ public class ProductLister {
 
 		DefaultTableCellRenderer headerRenderer = (DefaultTableCellRenderer) salesInventoryTable.getTableHeader().getDefaultRenderer();
 		headerRenderer.setBorder(null);
-		headerRenderer.setHorizontalAlignment(JLabel.LEFT);
+		headerRenderer.setHorizontalAlignment(JLabel.LEFT); inventoryLabel.setFont(Config.itemQuantityFont); inventoryLabel.setForeground(Config.colors.item_selected_border);
 
 		// Global table config
 		salesInventoryTable.getTableHeader().setFont(Config.tableHeaderFont);
@@ -63,13 +66,18 @@ public class ProductLister {
 		salesInventoryPane.getViewport().setBackground(Config.colors.item_container_bg);
 		salesInventoryPane.setBorder(BorderFactory.createLineBorder(Config.colors.item_container_bg, 1));
 
-		salesInventoryPane.setBounds(10, 40, columnOverAllWidth, rowWidth);
-		tempWindow.setSize(columnWidth, 400);
-		tempWindow.getContentPane().setBackground(Config.colors.item_container_bg);
-		tempWindow.setLocationRelativeTo(Config.mainWindow);
-		tempWindow.add(salesInventoryPane);
-		tempWindow.setResizable(false);
-		tempWindow.setVisible(true);
+		// Sizing and display to the screen
+		salesInventoryPane.setBounds(10, 70, columnOverAllWidth, rowWidth);
+		inventoryLabel.setBounds(10, 10, columnWidth, 40);
+		window.setSize(columnWidth, 360);
+		window.getContentPane().setBackground(Config.colors.item_container_bg);
+		window.setLocationRelativeTo(Config.mainWindow);
+		window.add(inventoryLabel);
+		window.add(salesInventoryPane);
+		window.setResizable(false);
+		window.setVisible(false);
+
+		return window;
 	}
 }
 

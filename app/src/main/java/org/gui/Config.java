@@ -12,16 +12,25 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class Config {
-	public static Boolean canClickNext = false;
-	public static int allProductsCount = 12;
-	public static double TotalSales = 0;
-	public static JFrame mainWindow;
-	public static Font itemQuantityFont;
-	public static Font itemNameFont;
-	public static Font itemPriceFont;
-	public static Font tableHeaderFont;
-	public static Font inputLabelFont;
-	public static Font inputFont;
+	static Boolean canClickNext = false;
+	static int allProductsCount = 12;
+	static double TotalSales = 0;
+	static JFrame mainWindow;
+	static Font itemQuantityFont;
+	static Font itemNameFont;
+	static Font itemPriceFont;
+	static Font tableHeaderFont;
+	static Font inputLabelFont;
+	static Font inputFont;
+	static JFormattedTextField cashInput;
+	static ProductLister productLister;
+
+	static void showSalesInventory () {
+		productLister.salesInventoryWindow.setVisible(true);
+	}
+	static void hideSalesInventory () {
+		productLister.salesInventoryWindow.setVisible(false);
+	}
 
 	class colors {
 		final static Color bg_color = new Color(219, 0, 7);
@@ -71,6 +80,13 @@ public class Config {
 				double cashValue = cashNum.doubleValue();
 				double totalValue = totalNum.doubleValue();
 
+				if (productItemManager.Model.getRowCount() <= 0) {
+					JOptionPane.showMessageDialog(totalIn,  
+						"No Items.", 
+						"Warning", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
 				if (cashValue <= 0) {
 					JOptionPane.showMessageDialog(totalIn,  
 						"Please input cash.", 
@@ -89,6 +105,7 @@ public class Config {
 				changeIn.setValue(cashValue - totalValue);
 				Config.canClickNext = true;
 				Config.ButtonConfig.inputButtonsStyles(okButton, nextButton, cancelButton, salesButton);
+				Config.cashInput.setEnabled(false);
 				nextButton.setEnabled(true);
 			});
 
@@ -100,7 +117,6 @@ public class Config {
 				DefaultTableModel globalModel = productItemManager.GlobalModel;
 				int totalRow = model.getRowCount();
 
-				Config.TotalSales = 0;
 				for (int t = 0; t < totalRow; t++) {
 					int rowId = (Integer) model.getValueAt(t, 4),
 						quantity = (Integer) model.getValueAt(t, 2),
@@ -130,6 +146,7 @@ public class Config {
 				Config.canClickNext = false;
 				Config.ButtonConfig.disableButtonStyle(nextButton);
 				nextButton.setEnabled(false);
+				Config.cashInput.setEnabled(true);
 			});
 
 			cancelButton.addActionListener(e -> {
@@ -147,6 +164,7 @@ public class Config {
 				Config.canClickNext = false;
 				Config.ButtonConfig.disableButtonStyle(nextButton);
 				nextButton.setEnabled(false);
+				Config.cashInput.setEnabled(true);
 			});
 
 			salesButton.addActionListener(e -> {
@@ -164,7 +182,7 @@ public class Config {
 				System.out.println("\n");
 
 				// Show GUI table
-				ProductLister.showSalesInventory(productItemManager.GlobalModel);
+				Config.showSalesInventory();
 			});
 		}
 	}

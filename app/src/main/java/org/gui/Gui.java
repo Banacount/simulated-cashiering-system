@@ -58,6 +58,7 @@ class GUI {
 		// Product Lister
 		productList = new ProductLister(tableHeaderFont);
 		productList.scrollList.setBounds(720, 60, 345, 320);
+		productLister = productList; 
 		JF.add(productList.scrollList);
 
 
@@ -76,6 +77,7 @@ class GUI {
 			inputOffset, JF, "Cash", true
 		);
 		JF.add(cashIn);
+		cashInput = cashIn;
 		// Change input and label
 		inputOffset += 80;
 		JFormattedTextField changeIn = Helpers.inputOperations(
