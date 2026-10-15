@@ -31,10 +31,10 @@ public class ProductLister {
 		// Current table config
 		productsSelectedTable.setDefaultEditor(Object.class, null);
 		productsSelectedTable.removeColumn(productsSelectedTable.getColumn("id"));
-		salesInventoryWindow = createSalesInventoryWindow(globalModel);
+		salesInventoryWindow = createSalesInventoryWindow();
 	}
 
-	static JDialog createSalesInventoryWindow (DefaultTableModel globalModel) {
+	private JDialog createSalesInventoryWindow () {
 		JDialog window = new JDialog(Config.mainWindow, "Sales Inventory");
 		JTable salesInventoryTable = new JTable(globalModel);
 		JScrollPane salesInventoryPane = new JScrollPane(salesInventoryTable);
@@ -51,7 +51,9 @@ public class ProductLister {
 
 		DefaultTableCellRenderer headerRenderer = (DefaultTableCellRenderer) salesInventoryTable.getTableHeader().getDefaultRenderer();
 		headerRenderer.setBorder(null);
-		headerRenderer.setHorizontalAlignment(JLabel.LEFT); inventoryLabel.setFont(Config.itemQuantityFont); inventoryLabel.setForeground(Config.colors.item_selected_border);
+		headerRenderer.setHorizontalAlignment(JLabel.LEFT); 
+		inventoryLabel.setFont(Config.itemQuantityFont); 
+		inventoryLabel.setForeground(Config.colors.item_selected_border);
 
 		// Global table config
 		salesInventoryTable.getTableHeader().setFont(Config.tableHeaderFont);

@@ -12,9 +12,6 @@ import javax.swing.*;
 class GUI {
 	JFrame JF;
 
-	// font sizes
-	ProductLister productList;
-
 	GUI () { 
 		// Enable anti-aliasing
         System.setProperty("awt.useSystemAAFontSettings", "on");
@@ -47,20 +44,23 @@ class GUI {
 
 		Config.itemPriceFont = new Font("Arial", Font.PLAIN, 12);
 		Config.inputFont = new Font("Arial", Font.PLAIN, 15);
+
 		JF.setLayout(null);
 	}
 
 	public void addContents () {
+		// Assemble product objects and globalize the productItemManager
+		ProductLister productList = new ProductLister(tableHeaderFont);
+		ProductItemManager productItemManager = new ProductItemManager(productList);
+		Config.productItemManager = productItemManager;
+
 		// McDonalds Logo
 		JLabel mcLogo = Helpers.imageLabel(8, 8, 50, 50, "/mcdonalds_logo.png");
 		JF.add(mcLogo);
 
-		// Product Lister
-		productList = new ProductLister(tableHeaderFont);
+		// Display product list (table)
 		productList.scrollList.setBounds(720, 60, 345, 320);
-		productLister = productList; 
 		JF.add(productList.scrollList);
-
 
 		// Cashier operations
 		// Total input and label
@@ -69,6 +69,7 @@ class GUI {
 			inputFont, Config.inputLabelFont, 
 			inputOffset, JF, "Total", false
 		);
+		Config.totalInput = totalIn;
 		JF.add(totalIn);
 		// Cash input and label
 		inputOffset += 80;
@@ -76,27 +77,24 @@ class GUI {
 			inputFont, inputLabelFont, 
 			inputOffset, JF, "Cash", true
 		);
+		Config.cashInput = cashIn;
 		JF.add(cashIn);
-		cashInput = cashIn;
 		// Change input and label
 		inputOffset += 80;
 		JFormattedTextField changeIn = Helpers.inputOperations(
 			inputFont, inputLabelFont, 
 			inputOffset, JF, "Change", false
 		);
+		Config.changeInput = changeIn;
 		JF.add(changeIn);
 
 
 		// Products and its container
 		JPanel item_container = new JPanel();
-		ProductItemManager products = new ProductItemManager(
-			itemNameFont, itemPriceFont, itemQuantityFont, 
-			productList.model, productList.globalModel, totalIn
-		);
 		item_container.setLayout(new FlowLayout(FlowLayout.LEFT, 6, 6));
 		item_container.setBackground(Config.colors.item_container_bg);
 		item_container.setBounds(8, 60, 700, 620);
-		products.render(item_container);
+		productItemManager.render(item_container);
 		JF.add(item_container);
 
 		// Buttons
@@ -113,11 +111,9 @@ class GUI {
 		JButton salesButton = new JButton("Sales Inventory"); salesButton.setFont(inputLabelFont);
 		salesButton.setBounds(880, 16, 180, 40);
 
-		Config.ButtonConfig.inputButtonsStyles(okButton, nextButton, cancelButton, salesButton);
-		Config.ButtonConfig.inputButtonsFunctions(
-			okButton, nextButton, cancelButton, salesButton, 
-			products, new Object[] {totalIn, cashIn, changeIn}
-		);
+		ButtonConfig handleButton = new ButtonConfig(okButton, nextButton, cancelButton, salesButton);
+		handleButton.inputButtonsStyles();
+		handleButton.inputButtonsFunctions();
 		JF.add(okButton);
 		JF.add(nextButton);
 		JF.add(cancelButton);

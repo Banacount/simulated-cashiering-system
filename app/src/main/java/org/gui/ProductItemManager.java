@@ -6,34 +6,37 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
-
+import static org.gui.Config.*;
 
 public class ProductItemManager {
 	private ProductItem[] products = new ProductItem[12];
-	DefaultTableModel Model, GlobalModel;
+	ProductLister productLister;
 
-	ProductItemManager (Font nameFont, Font priceFont, Font quantityFont, DefaultTableModel model, DefaultTableModel globalModel, JFormattedTextField totalIn) 
+	ProductItemManager (ProductLister product_lister) 
 	{
-		products[0]  = new ProductItem("1-pc. Chicken McDo", 104, "/products/1pc_chicken_mcdo.png", nameFont, priceFont, quantityFont);
-		products[1]  = new ProductItem("Crispy Chicken Fillet Ala King", 99, "/products/crispy_chicken_fillet_ala_king.png", nameFont, priceFont, quantityFont);
-		products[2]  = new ProductItem("McShaker Fries Medium Galbi", 115, "/products/mcshaker_fries_medium_galbi.png", nameFont, priceFont, quantityFont);
-		products[3]  = new ProductItem("6-pc. Chicken McShare Box", 525, "/products/6pc_chicken_mcshare_box.png", nameFont, priceFont, quantityFont);
-		products[4]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
-		products[5]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
-		products[6]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
-		products[7]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
-		products[8]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
-		products[9]  = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
-		products[10] = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
-		products[11] = new ProductItem("test", 500, "/test_product.png", nameFont, priceFont, quantityFont);
+		products[0]  = new ProductItem("1-pc. Chicken McDo", 104, "/products/1pc_chicken_mcdo.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[1]  = new ProductItem("Crispy Chicken Fillet Ala King", 99, "/products/crispy_chicken_fillet_ala_king.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[2]  = new ProductItem("McShaker Fries Medium Galbi", 115, "/products/mcshaker_fries_medium_galbi.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[3]  = new ProductItem("6-pc. Chicken McShare Box", 525, "/products/6pc_chicken_mcshare_box.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[4]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[5]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[6]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[7]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[8]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[9]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[10] = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[11] = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
+
+		productLister = product_lister;
+		DefaultTableModel globalModel = productLister.globalModel;
+		DefaultTableModel model = productLister.model;
 
 		for (int e = 0; e < products.length; e++) {
 			products[e].id = e;
 			products[e].model = model;
-			products[e].totalIn = totalIn;
 
 			String total = "₱ "+ (products[e].price*products[e].quantity);
-			globalModel.addRow(new Object[]{
+			productLister.globalModel.addRow(new Object[]{
 				products[e].productName,
 				products[e].price,
 				products[e].quantity,
@@ -50,9 +53,6 @@ public class ProductItemManager {
 			"₱ 0",
 			-1,
 		});
-
-		Model = model;
-		GlobalModel = globalModel;
 	}
 
 	void render (JPanel container) {

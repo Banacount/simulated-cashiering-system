@@ -4,11 +4,19 @@ import java.awt.Font;
 import java.awt.Image;
 import java.text.NumberFormat;
 
+import static org.gui.Config.*;
 import javax.swing.*;
 import javax.swing.text.NumberFormatter; 
 
 public class Helpers {
 	static Image tempGrayImage, tempOrigImage;
+
+	static void showSalesInventory () {
+		productItemManager.productLister.salesInventoryWindow.setVisible(true);
+	}
+	static void hideSalesInventory () {
+		productItemManager.productLister.salesInventoryWindow.setVisible(false);
+	}
 
 	public static JFormattedTextField inputOperations (Font inputFont, Font inputLabelFont, int offset, JFrame JF, String labelText, Boolean canEdit) {
 		JLabel label = Helpers.quickLabel(720, offset, labelText, inputLabelFont);

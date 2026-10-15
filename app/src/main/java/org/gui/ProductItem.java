@@ -12,10 +12,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import org.gui.Config.colors; 
+import static org.gui.Config.*;
 
 public class ProductItem {
 	JPanel item;
-	JFormattedTextField totalIn;
 	Boolean isDisabled = false;
 	DefaultTableModel model;
 	JLabel nameLabel, priceLabel, quantityLabel, imageLabel;
@@ -82,6 +82,7 @@ public class ProductItem {
 				// Enter quantity manually
 				if (e.getButton() == 1) {
 					String userInput = JOptionPane.showInputDialog("Enter item quantity:");
+					if (userInput == null) return;
 					if (userInput.equals("")) return;
 
 					try {
@@ -131,7 +132,7 @@ public class ProductItem {
 					int quantity = (Integer) model.getValueAt(t, 2);
 					total += price*quantity;
 				}
-				totalIn.setValue(total);
+				totalInput.setValue(total);
 			}
 		});
 
