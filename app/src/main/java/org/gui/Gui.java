@@ -6,7 +6,8 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.gui.Config.*;
+import static org.gui.Context.*;
+import static org.gui.Context.Fonts.*;
 import javax.swing.*;
 
 class GUI {
@@ -18,7 +19,7 @@ class GUI {
         System.setProperty("swing.aatext", "true");
 
 		JF = new JFrame("McDonalds Cashiering System");
-		Config.mainWindow = JF;
+		MainWindow = JF;
 
 		// load fonts
 		try {
@@ -29,21 +30,21 @@ class GUI {
 
 			Font baseFont = Font.createFont(Font.TRUETYPE_FONT, file);
 
-			Config.itemQuantityFont = baseFont.deriveFont(32f);
-			Config.itemNameFont = baseFont.deriveFont(12f);
-			Config.tableHeaderFont = baseFont.deriveFont(9f);
-			Config.inputLabelFont = baseFont.deriveFont(18f);
+			itemQuantityFont = baseFont.deriveFont(32f);
+			itemNameFont = baseFont.deriveFont(12f);
+			tableHeaderFont = baseFont.deriveFont(9f);
+			inputLabelFont = baseFont.deriveFont(18f);
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 
-			Config.itemQuantityFont = new Font("Arial", Font.PLAIN, 32);
-			Config.itemNameFont = new Font("Arial", Font.PLAIN, 3);
-			Config.tableHeaderFont = new Font("Arial", Font.PLAIN, 1);
-			Config.inputLabelFont = new Font("Arial", Font.PLAIN, 16);
+			itemQuantityFont = new Font("Arial", Font.PLAIN, 32);
+			itemNameFont = new Font("Arial", Font.PLAIN, 3);
+			tableHeaderFont = new Font("Arial", Font.PLAIN, 1);
+			inputLabelFont = new Font("Arial", Font.PLAIN, 16);
 		}
 
-		Config.itemPriceFont = new Font("Arial", Font.PLAIN, 12);
-		Config.inputFont = new Font("Arial", Font.PLAIN, 15);
+		itemPriceFont = new Font("Arial", Font.PLAIN, 12);
+		inputFont = new Font("Arial", Font.PLAIN, 15);
 
 		JF.setLayout(null);
 	}
@@ -52,7 +53,7 @@ class GUI {
 		// Assemble product objects and globalize the productItemManager
 		ProductLister productList = new ProductLister(tableHeaderFont);
 		ProductItemManager productItemManager = new ProductItemManager(productList);
-		Config.productItemManager = productItemManager;
+		ProductManager = productItemManager;
 
 		// McDonalds Logo
 		JLabel mcLogo = Helpers.imageLabel(8, 8, 50, 50, "/mcdonalds_logo.png");
@@ -66,10 +67,10 @@ class GUI {
 		// Total input and label
 		int inputOffset = 360;
 		JFormattedTextField totalIn = Helpers.inputOperations(
-			inputFont, Config.inputLabelFont, 
+			inputFont, inputLabelFont, 
 			inputOffset, JF, "Total", false
 		);
-		Config.totalInput = totalIn;
+		TotalInput = totalIn;
 		JF.add(totalIn);
 		// Cash input and label
 		inputOffset += 80;
@@ -77,7 +78,7 @@ class GUI {
 			inputFont, inputLabelFont, 
 			inputOffset, JF, "Cash", true
 		);
-		Config.cashInput = cashIn;
+		CashInput = cashIn;
 		JF.add(cashIn);
 		// Change input and label
 		inputOffset += 80;
@@ -85,14 +86,14 @@ class GUI {
 			inputFont, inputLabelFont, 
 			inputOffset, JF, "Change", false
 		);
-		Config.changeInput = changeIn;
+		ChangeInput = changeIn;
 		JF.add(changeIn);
 
 
 		// Products and its container
 		JPanel item_container = new JPanel();
 		item_container.setLayout(new FlowLayout(FlowLayout.LEFT, 6, 6));
-		item_container.setBackground(Config.colors.item_container_bg);
+		item_container.setBackground(Colors.ITEM_CONTAINER_BG);
 		item_container.setBounds(8, 60, 700, 620);
 		productItemManager.render(item_container);
 		JF.add(item_container);
@@ -124,7 +125,7 @@ class GUI {
 		JF.setResizable(false);
 		JF.setSize(1080,720);
 		JF.setVisible(true);
-		JF.getContentPane().setBackground(Config.colors.bg_color);
+		JF.getContentPane().setBackground(Colors.BG_COLOR);
 		JF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

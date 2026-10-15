@@ -3,19 +3,20 @@ package org.gui;
 import java.awt.Font;
 import java.awt.Image;
 import java.text.NumberFormat;
-
-import static org.gui.Config.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.NumberFormatter; 
+
+import static org.gui.Context.*;
 
 public class Helpers {
 	static Image tempGrayImage, tempOrigImage;
 
 	static void showSalesInventory () {
-		productItemManager.productLister.salesInventoryWindow.setVisible(true);
+		ProductManager.productLister.salesInventoryWindow.setVisible(true);
 	}
 	static void hideSalesInventory () {
-		productItemManager.productLister.salesInventoryWindow.setVisible(false);
+		ProductManager.productLister.salesInventoryWindow.setVisible(false);
 	}
 
 	public static JFormattedTextField inputOperations (Font inputFont, Font inputLabelFont, int offset, JFrame JF, String labelText, Boolean canEdit) {
@@ -61,7 +62,7 @@ public class Helpers {
 		JLabel label_ = new JLabel(label);
 		label_.setFont(font);
 		label_.setBounds(x, y, 100, 100);
-		label_.setForeground(Config.colors.item_selected_border);
+		label_.setForeground(Colors.ITEM_SELECTED_BORDER);
 		return label_;
 	}
 
@@ -80,5 +81,20 @@ public class Helpers {
 		input.setFont(inputFont);
 
 		return input;
+	}
+
+	static class DebugFunctions {
+		void printTableModel (DefaultTableModel model) {
+			int totalRow = AllProductsCount;
+
+			for (int i = 0; i < totalRow; i++) {
+				System.out.print("Name: " + model.getValueAt(i, 0) + ", ");
+				System.out.print("Price: " + model.getValueAt(i, 1) + ", ");
+				System.out.print("Quantity: " + model.getValueAt(i, 2) + ", ");
+				System.out.print("Subtotal: " + model.getValueAt(i, 3) + ", ");
+				System.out.println("");
+			}
+			System.out.println("\n");
+		}
 	}
 }

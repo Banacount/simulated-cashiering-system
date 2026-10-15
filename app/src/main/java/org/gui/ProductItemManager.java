@@ -1,12 +1,10 @@
 package org.gui;
 
-import java.awt.Font;
-import java.util.Vector;
-
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
-import static org.gui.Config.*;
+
+import static org.gui.Context.*;
 
 public class ProductItemManager {
 	private ProductItem[] products = new ProductItem[12];
@@ -14,18 +12,18 @@ public class ProductItemManager {
 
 	ProductItemManager (ProductLister product_lister) 
 	{
-		products[0]  = new ProductItem("1-pc. Chicken McDo", 104, "/products/1pc_chicken_mcdo.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[1]  = new ProductItem("Crispy Chicken Fillet Ala King", 99, "/products/crispy_chicken_fillet_ala_king.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[2]  = new ProductItem("McShaker Fries Medium Galbi", 115, "/products/mcshaker_fries_medium_galbi.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[3]  = new ProductItem("6-pc. Chicken McShare Box", 525, "/products/6pc_chicken_mcshare_box.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[4]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[5]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[6]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[7]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[8]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[9]  = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[10] = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
-		products[11] = new ProductItem("test", 500, "/test_product.png", itemNameFont, itemPriceFont, itemQuantityFont);
+		products[0]  = new ProductItem("1-pc. Chicken McDo", 104, "/products/1pc_chicken_mcdo.png");
+		products[1]  = new ProductItem("Crispy Chicken Fillet Ala King", 99, "/products/crispy_chicken_fillet_ala_king.png");
+		products[2]  = new ProductItem("McShaker Fries Medium Galbi", 115, "/products/mcshaker_fries_medium_galbi.png");
+		products[3]  = new ProductItem("6-pc. Chicken McShare Box", 525, "/products/6pc_chicken_mcshare_box.png");
+		products[4]  = new ProductItem("test", 500, "/test_product.png");
+		products[5]  = new ProductItem("test", 500, "/test_product.png");
+		products[6]  = new ProductItem("test", 500, "/test_product.png");
+		products[7]  = new ProductItem("test", 500, "/test_product.png");
+		products[8]  = new ProductItem("test", 500, "/test_product.png");
+		products[9]  = new ProductItem("test", 500, "/test_product.png");
+		products[10] = new ProductItem("test", 500, "/test_product.png");
+		products[11] = new ProductItem("test", 500, "/test_product.png");
 
 		productLister = product_lister;
 		DefaultTableModel globalModel = productLister.globalModel;
@@ -35,7 +33,7 @@ public class ProductItemManager {
 			products[e].id = e;
 			products[e].model = model;
 
-			String total = "₱ "+ (products[e].price*products[e].quantity);
+			String total = CURRENCY + (products[e].price*products[e].quantity);
 			productLister.globalModel.addRow(new Object[]{
 				products[e].productName,
 				products[e].price,
@@ -47,12 +45,9 @@ public class ProductItemManager {
 		globalModel.addRow((Object[]) null);
 		globalModel.addRow((Object[]) null);
 		globalModel.addRow(new Object[]{
-			"TOTAL SALES",
-			"",
-			"",
-			"₱ 0",
-			-1,
+			"TOTAL SALES", "", "", "₱ 0", -1,
 		});
+		AllProductsCount = products.length;
 	}
 
 	void render (JPanel container) {
@@ -66,10 +61,11 @@ public class ProductItemManager {
 			ProductItem product = products[i];
 
 			product.isDisabled = true;
-			product.nameLabel.setForeground(Config.colors.disabled_color);
-			product.priceLabel.setForeground(Config.colors.disabled_color);
-			product.quantityLabel.setForeground(Config.colors.disabled_color);
-			product.item.setBorder(BorderFactory.createLineBorder(Config.colors.disabled_color, 2));
+			product.nameLabel.setForeground(Colors.DISABLED_COLOR);
+			product.priceLabel.setForeground(Colors.DISABLED_COLOR);
+			product.quantityLabel.setForeground(Colors.DISABLED_COLOR);
+			product.item.setBorder(BorderFactory.createLineBorder(Colors.DISABLED_COLOR, 2));
+
 			// Change image
 			ImageIcon loadImg = new ImageIcon(product.grayImage);
 			product.imageLabel.setIcon(loadImg);
@@ -81,10 +77,10 @@ public class ProductItemManager {
 			ProductItem product = products[i];
 
 			product.isDisabled = false;
-			product.nameLabel.setForeground(Config.colors.fg_color);
-			product.priceLabel.setForeground(Config.colors.fg_color);
-			product.quantityLabel.setForeground(Config.colors.item_selected_border);
-			product.item.setBorder(BorderFactory.createLineBorder(Config.colors.item_border, 1));
+			product.nameLabel.setForeground(Colors.FG_COLOR);
+			product.priceLabel.setForeground(Colors.FG_COLOR);
+			product.quantityLabel.setForeground(Colors.ITEM_SELECTED_BORDER);
+			product.item.setBorder(BorderFactory.createLineBorder(Colors.ITEM_BORDER, 1));
 
 			// Change image
 			ImageIcon loadImg = new ImageIcon(product.originalImage);

@@ -1,9 +1,11 @@
 package org.gui;
-import java.awt.Component;
 import java.awt.Font;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel; 
+
+import static org.gui.Context.*; 
+import static org.gui.Context.Fonts.*; 
 
 public class ProductLister {
 	JTable productsSelectedTable;
@@ -35,7 +37,7 @@ public class ProductLister {
 	}
 
 	private JDialog createSalesInventoryWindow () {
-		JDialog window = new JDialog(Config.mainWindow, "Sales Inventory");
+		JDialog window = new JDialog(MainWindow, "Sales Inventory");
 		JTable salesInventoryTable = new JTable(globalModel);
 		JScrollPane salesInventoryPane = new JScrollPane(salesInventoryTable);
 		JLabel inventoryLabel = new JLabel("McDonald's Sales Inventory");
@@ -52,28 +54,28 @@ public class ProductLister {
 		DefaultTableCellRenderer headerRenderer = (DefaultTableCellRenderer) salesInventoryTable.getTableHeader().getDefaultRenderer();
 		headerRenderer.setBorder(null);
 		headerRenderer.setHorizontalAlignment(JLabel.LEFT); 
-		inventoryLabel.setFont(Config.itemQuantityFont); 
-		inventoryLabel.setForeground(Config.colors.item_selected_border);
+		inventoryLabel.setFont(itemQuantityFont); 
+		inventoryLabel.setForeground(Colors.ITEM_SELECTED_BORDER);
 
 		// Global table config
-		salesInventoryTable.getTableHeader().setFont(Config.tableHeaderFont);
-		salesInventoryTable.setFont(Config.itemPriceFont);
+		salesInventoryTable.getTableHeader().setFont(tableHeaderFont);
+		salesInventoryTable.setFont(itemPriceFont);
 		salesInventoryTable.setDefaultEditor(Object.class, null);
 		salesInventoryTable.setShowGrid(false);
 		salesInventoryTable.setTableHeader(null);
 
 		// Blend in to the window
-		salesInventoryTable.setBackground(Config.colors.item_container_bg);
+		salesInventoryTable.setBackground(Colors.ITEM_CONTAINER_BG);
 		salesInventoryTable.setEnabled(false);
-		salesInventoryPane.getViewport().setBackground(Config.colors.item_container_bg);
-		salesInventoryPane.setBorder(BorderFactory.createLineBorder(Config.colors.item_container_bg, 1));
+		salesInventoryPane.getViewport().setBackground(Colors.ITEM_CONTAINER_BG);
+		salesInventoryPane.setBorder(BorderFactory.createLineBorder(Colors.ITEM_CONTAINER_BG, 1));
 
 		// Sizing and display to the screen
 		salesInventoryPane.setBounds(10, 70, columnOverAllWidth, rowWidth);
 		inventoryLabel.setBounds(10, 10, columnWidth, 40);
 		window.setSize(columnWidth, 360);
-		window.getContentPane().setBackground(Config.colors.item_container_bg);
-		window.setLocationRelativeTo(Config.mainWindow);
+		window.getContentPane().setBackground(Colors.ITEM_CONTAINER_BG);
+		window.setLocationRelativeTo(MainWindow);
 		window.add(inventoryLabel);
 		window.add(salesInventoryPane);
 		window.setResizable(false);

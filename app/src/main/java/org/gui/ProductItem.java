@@ -2,17 +2,14 @@ package org.gui;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import org.gui.Config.colors; 
-import static org.gui.Config.*;
+import static org.gui.Context.*;
+import static org.gui.Context.Fonts.*;
 
 public class ProductItem {
 	JPanel item;
@@ -24,7 +21,7 @@ public class ProductItem {
 	int quantity = 0, price, id;
 	String productName;
 
-	ProductItem (String name, int productPrice, String imagePath, Font nameFont, Font priceFont, Font quantityFont) {
+	ProductItem (String name, int productPrice, String imagePath) {
 		int width = 163 + 4, height = 194 + 4, imgPadding = 20;
 		price = productPrice;
 		productName = name;
@@ -41,31 +38,29 @@ public class ProductItem {
 		grayImage = Helpers.tempGrayImage;
 
 		JLabel productNameLbl = new JLabel(name, SwingConstants.CENTER);
-		JLabel productPriceLbl = new JLabel("₱ " + price, SwingConstants.CENTER);
+		JLabel productPriceLbl = new JLabel(CURRENCY + price, SwingConstants.CENTER);
 		JLabel productQuantityLbl = new JLabel("0", SwingConstants.LEFT);
 
 		int offset = width;
 
-		productNameLbl.setFont(nameFont);
+		productNameLbl.setFont(itemNameFont);
 		productNameLbl.setBounds(imgPadding/2, offset-6, width-imgPadding, 16);
-		productNameLbl.setForeground(Config.colors.fg_color);
+		productNameLbl.setForeground(Colors.FG_COLOR);
 
-		productPriceLbl.setFont(priceFont);
+		productPriceLbl.setFont(itemPriceFont);
 		productPriceLbl.setBounds(0, offset+6, width, 22);
-		productPriceLbl.setForeground(Config.colors.fg_color);
+		productPriceLbl.setForeground(Colors.FG_COLOR);
 
-		productQuantityLbl.setFont(quantityFont);
+		productQuantityLbl.setFont(itemQuantityFont);
 		productQuantityLbl.setBounds(10, 10, width-50, 40);
-		productQuantityLbl.setForeground(Config.colors.item_selected_border);
+		productQuantityLbl.setForeground(Colors.ITEM_SELECTED_BORDER);
 
 		item.setLayout(null);
-		item.add(productQuantityLbl);
-		item.add(productImage);
-		item.add(productNameLbl);
+		item.add(productQuantityLbl); item.add(productImage); item.add(productNameLbl);
 		item.add(productPriceLbl);
 
-		item.setBackground(Config.colors.item_container_bg);
-		item.setBorder(BorderFactory.createLineBorder(Config.colors.item_border, 1));
+		item.setBackground(Colors.ITEM_CONTAINER_BG);
+		item.setBorder(BorderFactory.createLineBorder(Colors.ITEM_BORDER, 1));
 		item.setSize(width, height);
 		item.setPreferredSize(new Dimension(width, height));
 		item.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -95,11 +90,11 @@ public class ProductItem {
 
 				// Indicator for quantity
 				if (quantity > 0) {
-					item.setBorder(BorderFactory.createLineBorder(Config.colors.item_selected_border, 2));
+					item.setBorder(BorderFactory.createLineBorder(Colors.ITEM_SELECTED_BORDER, 2));
 					productQuantityLbl.setVisible(true);
 					productQuantityLbl.setText(String.valueOf(quantity));
 				} else {
-					item.setBorder(BorderFactory.createLineBorder(Config.colors.item_border, 1));
+					item.setBorder(BorderFactory.createLineBorder(Colors.ITEM_BORDER, 1));
 					productQuantityLbl.setVisible(false);
 				}
 
@@ -114,10 +109,10 @@ public class ProductItem {
 				}
 
 				if (itemRow == -1 && quantity > 0) {
-					String total = "₱ "+ (price*quantity);
+					String total = CURRENCY + (price*quantity);
 					model.addRow(new Object[]{name, price, quantity, total, id});
 				} else if (itemRow > -1) {
-					String total = "₱ "+ (price*quantity);
+					String total = CURRENCY + (price*quantity);
 					model.setValueAt(quantity, itemRow, 2);
 					model.setValueAt(total, itemRow, 3);
 				}
@@ -132,7 +127,7 @@ public class ProductItem {
 					int quantity = (Integer) model.getValueAt(t, 2);
 					total += price*quantity;
 				}
-				totalInput.setValue(total);
+				TotalInput.setValue(total);
 			}
 		});
 
