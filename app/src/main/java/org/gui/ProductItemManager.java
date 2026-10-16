@@ -16,14 +16,14 @@ public class ProductItemManager {
 		products[1]  = new ProductItem("Crispy Chicken Fillet Ala King", 99, "/products/crispy_chicken_fillet_ala_king.png");
 		products[2]  = new ProductItem("McShaker Fries Medium Galbi", 115, "/products/mcshaker_fries_medium_galbi.png");
 		products[3]  = new ProductItem("6-pc. Chicken McShare Box", 525, "/products/6pc_chicken_mcshare_box.png");
-		products[4]  = new ProductItem("test", 500, "/test_product.png");
-		products[5]  = new ProductItem("test", 500, "/test_product.png");
-		products[6]  = new ProductItem("test", 500, "/test_product.png");
-		products[7]  = new ProductItem("test", 500, "/test_product.png");
-		products[8]  = new ProductItem("test", 500, "/test_product.png");
-		products[9]  = new ProductItem("test", 500, "/test_product.png");
-		products[10] = new ProductItem("test", 500, "/test_product.png");
-		products[11] = new ProductItem("test", 500, "/test_product.png");
+		products[4]  = new ProductItem("2-pc. Hotcakes Solo", 99, "/products/2pc_hotcakes_solo.png");
+		products[5]  = new ProductItem("Sausage McMuffin w/ Hash Browns Meal", 163, "/products/sausage_mcmuffin_w_hash_browns_meal.png");
+		products[6]  = new ProductItem("Cheesy Eggdesal w/ Sausage Solo", 115, "/products/cheesy_eggdesal_w_sausage_solo.png");
+		products[7]  = new ProductItem("Cheesy Eggdesal Solo", 85, "/products/cheesy_eggdesal_solo.png");
+		products[8]  = new ProductItem("Sausage McMuffin w/ Egg Solo", 123, "/products/sausage_mcmuffin_w_egg_solo.png");
+		products[9]  = new ProductItem("Sausage McMuffin Solo", 106, "/products/sausage_mcmuffin_solo.png");
+		products[10] = new ProductItem("Double Egg-Oh! Melt", 99, "/products/double_egg_oh_melt.png");
+		products[11] = new ProductItem("Big Breakfast Meal", 203, "/products/big_breakfast_meal.png");
 
 		productLister = product_lister;
 		DefaultTableModel globalModel = productLister.globalModel;
