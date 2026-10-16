@@ -112,4 +112,42 @@ public class SalesService {
 
 		resetSalesState();
 	}
+
+	void updateTableModel (int id, int price, int quantity, String name) {
+		// Update the table model (active product list)
+		int totalRows = model.getRowCount();
+		int itemRow = -1; // if this remains as -1 then the product doesn't exist in the model table
+
+		for (int i = 0; i < totalRows; i++) {
+			int row_id = (Integer) model.getValueAt(i, 4);
+			if (row_id == id) itemRow = i;
+		}
+
+		// check and add
+		if (itemRow == -1 && quantity > 0) {
+			String total = CURRENCY + (price*quantity);
+			model.addRow(new Object[]{name, price, quantity, total, id});
+		}
+
+		// check and set
+		if (itemRow > -1) {
+			String total = CURRENCY + (price*quantity);
+			model.setValueAt(quantity, itemRow, 2);
+			model.setValueAt(total, itemRow, 3);
+		}
+
+		// check and remove
+		if (itemRow != -1 && quantity <= 0) model.removeRow(itemRow);
+
+		// Calculate total value and set to total input
+		int total = 0;
+		totalRows = model.getRowCount();
+		for (int t = 0; t < totalRows; t++) {
+			int row_price = (Integer) model.getValueAt(t, 1);
+			int row_quantity = (Integer) model.getValueAt(t, 2);
+			total += row_price*row_quantity;
+		}
+
+		TotalInput.setValue(total);
+	}
 }

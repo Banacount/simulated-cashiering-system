@@ -119,6 +119,9 @@ class GUI {
 		JF.add(nextButton);
 		JF.add(cancelButton);
 		JF.add(salesButton);
+
+		// Managing the model and globalModel transactions
+		SalesManager = new SalesService(handleButton);
 	}
 
 	public void display () {

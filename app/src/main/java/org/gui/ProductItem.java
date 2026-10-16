@@ -98,36 +98,7 @@ public class ProductItem {
 					productQuantityLbl.setVisible(false);
 				}
 
-				// Update the product lister
-				int totalRows = model.getRowCount();
-				int itemRow = -1;
-
-				for (int i = 0; i < totalRows; i++) {
-					int row_id = (Integer) model.getValueAt(i, 4);
-
-					if (row_id == id) itemRow = i;
-				}
-
-				if (itemRow == -1 && quantity > 0) {
-					String total = CURRENCY + (price*quantity);
-					model.addRow(new Object[]{name, price, quantity, total, id});
-				} else if (itemRow > -1) {
-					String total = CURRENCY + (price*quantity);
-					model.setValueAt(quantity, itemRow, 2);
-					model.setValueAt(total, itemRow, 3);
-				}
-
-				if (itemRow != -1 && quantity <= 0) model.removeRow(itemRow);
-
-				// Calculate total
-				int total = 0;
-				totalRows = model.getRowCount();
-				for (int t = 0; t < totalRows; t++) {
-					int price = (Integer) model.getValueAt(t, 1);
-					int quantity = (Integer) model.getValueAt(t, 2);
-					total += price*quantity;
-				}
-				TotalInput.setValue(total);
+				SalesManager.updateTableModel(id, price, quantity, name);
 			}
 		});
 

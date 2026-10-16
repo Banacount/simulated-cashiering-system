@@ -2,8 +2,6 @@ package org.gui;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import static org.gui.Context.*;
 
 public class ButtonConfig {
@@ -45,12 +43,11 @@ public class ButtonConfig {
 	void inputButtonsFunctions () 
 	{
 		ButtonConfig.disableButtonStyle(nextButton);
-		SalesService salesService = new SalesService(this);
 		nextButton.setEnabled(false);
 
-		okButton.addActionListener(e -> salesService.onOk());
-		nextButton.addActionListener(e -> salesService.onNext());
-		cancelButton.addActionListener(e -> salesService.onCancel());
+		okButton.addActionListener(e -> SalesManager.onOk());
+		nextButton.addActionListener(e -> SalesManager.onNext());
+		cancelButton.addActionListener(e -> SalesManager.onCancel());
 		salesButton.addActionListener(e -> Helpers.showSalesInventory());
 	}
 }

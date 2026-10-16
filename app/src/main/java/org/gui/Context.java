@@ -8,10 +8,11 @@ import javax.swing.JFrame;
 public class Context {
 	// State Variables
 	static JFrame MainWindow;
-	static ProductItemManager ProductManager;
 	static Boolean CanClickNextButton = false;
 	static int AllProductsCount;
 	static double TotalSales = 0;
+	static ProductItemManager ProductManager;
+	static SalesService SalesManager;
 	
 	static JFormattedTextField TotalInput;
 	static JFormattedTextField CashInput;
